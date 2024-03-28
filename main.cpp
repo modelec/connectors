@@ -1,6 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include "serialib.h"
+#include <limits>
 #define SERIAL_PORT "/dev/ttyACM0"
 #define MAX_MESSAGE_LEN 64
 #define BAUDS 115200 //vitesse des données (bit/sec)
@@ -28,7 +29,7 @@ void read_from_arduino(serialib* serial, char * message_output, int nbLines2Rcv)
 void write_2_arduino(serialib* serial, char* message){
     char myString[MAX_MESSAGE_LEN] = {0};
     strcpy(myString, message);
-    myString[strlen(myString)] = '\n';
+    myString[strlen(myString)] = '\0';
     serial->writeString(myString);
 }
 
@@ -41,23 +42,23 @@ serialib init_serial(){
 
 int main() {
     char  buffer[MAX_MESSAGE_LEN] = {0};
-    int nbLines = 2;
+    int nbLines = 1;
     serialib serial = init_serial();
     while (1){
         cout << ">> ";
-        cin >> buffer;
+        fgets(buffer, MAX_MESSAGE_LEN, stdin);
         write_2_arduino(&serial, buffer);
         read_from_arduino(&serial, buffer, nbLines);
         cout << buffer << endl;
-        //my_delay(nbLines*TIME_OUT);
+        fflush(stdin);
     }/*
-    write_2_arduino(&serial, "S 1500 500 0");
+    write_2_arduino(&serial, "S 0 0 0\n");
     read_from_arduino(&serial, buffer, nbLines);
     cout << buffer << endl;
-    write_2_arduino(&serial, "V 200");
+    write_2_arduino(&serial, "V 200\n");
     read_from_arduino(&serial, buffer, nbLines);
     cout << buffer << endl;
-    write_2_arduino(&serial, "G 500 1000");
+    write_2_arduino(&serial, "G 200 0\n");
     read_from_arduino(&serial, buffer, nbLines);
     cout << buffer << endl;*/
     serial.closeDevice();
