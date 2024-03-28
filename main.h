@@ -11,4 +11,8 @@
 
 using namespace std;
 
+void read_from_arduino(char * message_output);
+
+void write_2_arduino(char* message);
+
 #endif
