@@ -1,9 +1,9 @@
 #ifndef CONNECTOR
 #define CONNECTOR
 
-
 #include <iostream>
 #include "serialib.h"
+
 #define SERIAL_PORT "/dev/ttyACM0"
 #define MAX_MESSAGE_LEN  64
 #define BAUDS 9600 //vitesse des données (bit/sec)
@@ -11,8 +11,8 @@
 
 using namespace std;
 
-void read_from_arduino(char * message_output);
+void write_2_arduino(serialib* serial, char* message);
 
-void write_2_arduino(char* message);
+serialib init_serial();
 
 #endif

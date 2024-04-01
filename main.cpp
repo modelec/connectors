@@ -1,66 +1,61 @@
+#include "MyTCPClient.h"
+
 #include <iostream>
-#include <time.h>
-#include "serialib.h"
-#include <limits>
-#define SERIAL_PORT "/dev/ttyACM0"
-#define MAX_MESSAGE_LEN 64
-#define BAUDS 115200 //vitesse des données (bit/sec)
-#define TIME_OUT 2000
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include <string>
 
-using namespace std;
+std::atomic<bool> keepRunning(true);
+std::mutex dataMutex;
+std::string sharedData;
 
-void my_delay(int i)    /*Pause l'application pour i seconds*/
-{
-    clock_t start,end;
-    start=clock();
-    while(((end=clock())-start)<=i*CLOCKS_PER_SEC);
-}
-
-void read_from_arduino(serialib* serial, char * message_output, int nbLines2Rcv){
-    strncpy(message_output, "", strlen(message_output));
-    char buffer[MAX_MESSAGE_LEN+1] = {0};
-    while(nbLines2Rcv-- != 0){
-        serial->readString(buffer, '\n', MAX_MESSAGE_LEN, TIME_OUT);
-        strcat(message_output, buffer);
-        strncpy(buffer, "", strlen(buffer));
+void serialReadThread(MyTCPClient* client) {
+    while (keepRunning) {
+        serialib serial = client->getSerial();
+        int dataAvailable = serial.available();
+        if (dataAvailable > 0) {
+            char buffer[128] = {0};
+            if (serial.readString(buffer, '\n', sizeof(buffer) - 1, 100) > 0) {
+                std::lock_guard<std::mutex> guard(dataMutex);
+                sharedData = buffer;
+                std::cout << "Data received from arduino : " << sharedData << std::endl;
+                client->handleMessageFromArduino(sharedData);
+            }
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
     }
 }
 
-void write_2_arduino(serialib* serial, char* message){
-    char myString[MAX_MESSAGE_LEN] = {0};
-    strcpy(myString, message);
-    myString[strlen(myString)] = '\0';
-    serial->writeString(myString);
-}
+int main(int argc, char *argv[]) {
+    int port = 8080;
+    if (argc > 1) {
+        port = atoi(argv[1]);
+    }
 
-serialib init_serial(){
-    serialib serial;
-    char errorOpening = serial.openDevice(SERIAL_PORT, BAUDS);
-    if (errorOpening!=1) exit(errorOpening);
-    return serial;
-}
+    MyTCPClient client("127.0.0.1", port);
 
-int main() {
-    char  buffer[MAX_MESSAGE_LEN] = {0};
-    int nbLines = 1;
-    serialib serial = init_serial();
-    while (1){
-        cout << ">> ";
-        fgets(buffer, MAX_MESSAGE_LEN, stdin);
-        write_2_arduino(&serial, buffer);
-        read_from_arduino(&serial, buffer, nbLines);
-        cout << buffer << endl;
-        fflush(stdin);
-    }/*
-    write_2_arduino(&serial, "S 0 0 0\n");
-    read_from_arduino(&serial, buffer, nbLines);
-    cout << buffer << endl;
-    write_2_arduino(&serial, "V 200\n");
-    read_from_arduino(&serial, buffer, nbLines);
-    cout << buffer << endl;
-    write_2_arduino(&serial, "G 200 0\n");
-    read_from_arduino(&serial, buffer, nbLines);
-    cout << buffer << endl;*/
-    serial.closeDevice();
+    client.init();
+
+    std::thread readThread(serialReadThread, &client);
+
+    while (true) {
+        std::string message;
+        std::cout << "Enter message ('quit' to exit): ";
+        std::getline(std::cin, message);
+
+        if (message == "quit") {
+            client.stop();
+            break;
+        }
+
+        client.sendMessage(message.c_str());
+    }
+
+    readThread.join();
+
+    client.stop();
+
     return 0;
 }
