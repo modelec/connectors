@@ -36,6 +36,8 @@ int main(int argc, char *argv[]) {
 
     MyTCPClient client("127.0.0.1", port);
 
+    client.start();
+
     client.init();
 
     std::thread readThread(serialReadThread, &client);
