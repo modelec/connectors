@@ -28,6 +28,8 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
 void MyTCPClient::init() {
     this->serial = init_serial();
+
+    this->sendMessage("arduino;strat;ready;1");
 }
 
 MyTCPClient::~MyTCPClient() {
