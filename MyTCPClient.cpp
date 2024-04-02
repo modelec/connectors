@@ -43,6 +43,8 @@ void MyTCPClient::handleMessage(const std::string &message) {
 void MyTCPClient::init() {
     this->serial = init_serial();
 
+    std::cout << "Serial is open ? : " << this->serial.isDeviceOpen() << std::endl;
+
     this->sendMessage("arduino;strat;ready;1");
 }
 
