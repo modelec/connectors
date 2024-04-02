@@ -13,11 +13,11 @@ std::string sharedData;
 void serialReadThread(MyTCPClient* client) {
     while (keepRunning) {
         // std::cout << "Checking for data from arduino..." << std::endl;
-        serialib serial = client->getSerial();
-        int dataAvailable = serial.available();
+        serialib* serial = &client->getSerial();
+        int dataAvailable = serial->available();
         if (dataAvailable > 0) {
             char buffer[128] = {0};
-            if (serial.readString(buffer, '\n', sizeof(buffer) - 1, 100) > 0) {
+            if (serial->readString(buffer, '\n', MAX_MESSAGE_LEN, TIME_OUT) > 0) {
                 std::lock_guard<std::mutex> guard(dataMutex);
                 sharedData = buffer;
                 std::cout << "Data received from arduino : " << sharedData << std::endl;
