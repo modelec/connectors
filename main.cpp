@@ -12,7 +12,7 @@ std::string sharedData;
 
 void serialReadThread(MyTCPClient* client) {
     while (keepRunning) {
-        std::cout << "Checking for data from arduino..." << std::endl;
+        // std::cout << "Checking for data from arduino..." << std::endl;
         serialib serial = client->getSerial();
         int dataAvailable = serial.available();
         if (dataAvailable > 0) {
