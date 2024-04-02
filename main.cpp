@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     client.init();
 
-    std::thread readThread(serialReadThread, &client);
+    // std::thread readThread(serialReadThread, &client);
 
     while (true) {
         std::string message;
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
         client.sendMessage(message.c_str());
     }
 
-    readThread.join();
+    // readThread.join();
 
     client.stop();
 
