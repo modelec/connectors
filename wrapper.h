@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void write_2_arduino(serialib* serial, char* message);
+void write_2_arduino(serialib* serial, const char* message);
 
 serialib init_serial();
 

@@ -20,8 +20,18 @@ void MyTCPClient::handleMessage(const std::string &message) {
         else if (token[2] == "go") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            // TODO handle S, V, G commands
-            // write_2_arduino(&serial, );
+            std::string command = "G " + args[0] + " " + args[1] + " " + args[2] + "\n";
+            write_2_arduino(&serial, command.c_str());
+        } else if (token[2] == "angle") {
+            std::vector<std::string> args = TCPSocket::split(token[3], ",");
+
+            std::string command = "R " + args[0] + "\n";
+            write_2_arduino(&serial, command.c_str());
+        } else if (token[2] == "set") {
+            std::vector<std::string> args = TCPSocket::split(token[3], ",");
+
+            std::string command = "S " + args[0] + " " + args[1] + " " + args[2] + "\n";
+            write_2_arduino(&serial, command.c_str());
         }
     }
 }

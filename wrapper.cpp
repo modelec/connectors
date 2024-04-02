@@ -1,6 +1,6 @@
 #include "wrapper.h"
 
-void write_2_arduino(serialib* serial, char* message){
+void write_2_arduino(serialib* serial, const char* message){
     char myString[MAX_MESSAGE_LEN] = {0};
     strcpy(myString, message);
     myString[strlen(myString)] = '\0';
