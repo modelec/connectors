@@ -25,9 +25,9 @@ void serialReadThread(MyTCPClient* client) {
                 std::cout << "Data received from arduino : " << sharedData << std::endl;
                 client->handleMessageFromArduino(sharedData);
             }
-        } else {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
