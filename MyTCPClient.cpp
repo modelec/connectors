@@ -32,6 +32,10 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
             std::string command = "S " + args[0] + " " + args[1] + " " + args[2] + "\n";
             write_2_arduino(&serial, command.c_str());
+        } else if (token[2] == "speed") {
+            std::string command = "V " + token[3] + "\n";
+
+            write_2_arduino(&serial, command.c_str());
         }
     }
 }
