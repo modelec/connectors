@@ -18,7 +18,7 @@ public:
 
     ~MyTCPClient() override;
 
-    serialib& getSerial() {
+    serialib* getSerial() {
         return serial;
     }
 
@@ -29,5 +29,5 @@ private:
     int timeOut = TIME_OUT;
     char buffer[MAX_MESSAGE_LEN] = "";
 
-    serialib serial;
+    serialib* serial;
 };

@@ -15,35 +15,35 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
     if (token[1] == "arduino" || token[1] == "all") {
         if (token[2] == "ping") {
-            write_2_arduino(&serial, "ping\n");
+            write_2_arduino(serial, "ping\n");
         }
         else if (token[2] == "go") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "G " + args[0] + " " + args[1] + "\n";
-            write_2_arduino(&serial, command.c_str());
+            write_2_arduino(serial, command.c_str());
         } else if (token[2] == "angle") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "R " + args[0] + "\n";
-            write_2_arduino(&serial, command.c_str());
+            write_2_arduino(serial, command.c_str());
         } else if (token[2] == "set") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "S " + args[0] + " " + args[1] + " " + args[2] + "\n";
-            write_2_arduino(&serial, command.c_str());
+            write_2_arduino(serial, command.c_str());
         }
     }
 }
 
 void MyTCPClient::init() {
-    this->serial = init_serial();
+    this->serial = &init_serial();
 
     this->sendMessage("arduino;strat;ready;1");
 }
 
 MyTCPClient::~MyTCPClient() {
-    this->serial.closeDevice();
+    this->serial->closeDevice();
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
