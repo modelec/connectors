@@ -10,6 +10,7 @@ void write_2_arduino(serialib* serial, const char* message){
 serialib init_serial(){
     serialib serial;
     char errorOpening = serial.openDevice(SERIAL_PORT, BAUDS);
+    std::cout << "Opening " << SERIAL_PORT << " at " << BAUDS << " bauds" << errorOpening << std::endl;
     if (errorOpening!=1) exit(errorOpening);
     return serial;
 }

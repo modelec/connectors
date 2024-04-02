@@ -6,7 +6,7 @@
 
 #define SERIAL_PORT "/dev/ttyACM0"
 #define MAX_MESSAGE_LEN  64
-#define BAUDS 9600 //vitesse des données (bit/sec)
+#define BAUDS 115200 //vitesse des données (bit/sec)
 #define TIME_OUT 2000
 
 using namespace std;
