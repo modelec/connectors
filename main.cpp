@@ -16,6 +16,7 @@ void serialReadThread(MyTCPClient* client) {
         serialib* serial = &client->getSerial();
         int dataAvailable = serial->available();
         if (dataAvailable > 0) {
+            std::cout << "Data available from arduino : " << dataAvailable << " bytes" << std::endl;
             char buffer[128] = {0};
             if (serial->readString(buffer, '\n', MAX_MESSAGE_LEN, TIME_OUT) > 0) {
                 std::lock_guard<std::mutex> guard(dataMutex);
