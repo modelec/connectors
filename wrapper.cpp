@@ -2,6 +2,8 @@
 
 void write_2_arduino(serialib* serial, const char* message){
     // std::cout << "Writing to arduino: " << myString << std::endl;
+    std::cout << "Is open : " << serial->isDeviceOpen() << std::endl;
+
     int t = serial->writeString(message);
 
     std::cout << "Result : " << t << std::endl;
