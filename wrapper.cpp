@@ -6,7 +6,9 @@ void write_2_arduino(serialib* serial, const char* message){
     myString[strlen(myString)] = '\0';
 
     std::cout << "Writing to arduino: " << myString << std::endl;
-    serial->writeString(myString);
+    int t = serial->writeString(myString);
+
+    std::cout << "Result : " << t << std::endl;
 }
 
 serialib init_serial(){
