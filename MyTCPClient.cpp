@@ -74,6 +74,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
 }
 
 int MyTCPClient::write_2_arduino(const std::string &message) {
+    std::cout << "Write to arduino : " << message << std::endl;
     return serial.writeString(message.c_str());
 }
 
