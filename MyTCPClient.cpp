@@ -1,6 +1,7 @@
 #include "MyTCPClient.h"
 
 MyTCPClient::MyTCPClient(const char *ip, int port) : TCPClient(ip, port) {
+    init();
 }
 
 void MyTCPClient::handleMessage(const std::string &message) {
@@ -15,46 +16,76 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
     if (token[1] == "arduino" || token[1] == "all") {
         if (token[2] == "ping") {
-            write_2_arduino(&serial, "ping\n");
+            this->write_2_arduino("ping\n");
         }
         else if (token[2] == "go") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "G " + args[0] + " " + args[1] + "\n";
-            write_2_arduino(&serial, command.c_str());
+            this->write_2_arduino(command);
         } else if (token[2] == "angle") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "R " + args[0] + "\n";
-            write_2_arduino(&serial, command.c_str());
+            this->write_2_arduino(command);
         } else if (token[2] == "set") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "S " + args[0] + " " + args[1] + " " + args[2] + "\n";
-            write_2_arduino(&serial, command.c_str());
+            this->write_2_arduino(command);
         } else if (token[2] == "speed") {
             std::string command = "V " + token[3] + "\n";
 
-            write_2_arduino(&serial, command.c_str());
+            this->write_2_arduino(command);
         }
     }
 }
 
 void MyTCPClient::init() {
-    this->serial = init_serial();
+    char errorOpening = this->serial.openDevice(SERIAL_PORT, BAUDS);
 
-    std::cout << "Serial is open ? : " << this->serial.isDeviceOpen() << std::endl;
+    std::cout << "Opening " << SERIAL_PORT << " at " << BAUDS << " bauds" << errorOpening << std::endl;
+
+    if (errorOpening > 0) {
+        std::cout << "Error opening serial port" << std::endl;
+    }
 
     this->sendMessage("arduino;strat;ready;1");
 }
 
-MyTCPClient::~MyTCPClient() {
+void MyTCPClient::start() {
+    TCPClient::start();
+    std::thread arduinoRecievedThread(&MyTCPClient::read_from_arduino, this);
+    arduinoRecievedThread.detach();
+}
+
+
+void MyTCPClient::stop() {
     this->serial.closeDevice();
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
     if (message == "pong") {
         this->sendMessage("arduino;ihm;pong;1");
+    } else {
+        std::cout << "Received from arduino : " << message << std::endl;
     }
     // TODO handle the response from arduino
+}
+
+int MyTCPClient::write_2_arduino(const std::string &message) {
+    return serial.writeString(message.c_str());
+}
+
+void MyTCPClient::read_from_arduino() {
+    while (running) {
+        if (serial.isDeviceOpen() && serial.available()) {
+            char buffer[MAX_MESSAGE_LEN+1] = {0};
+            if (serial.readString(buffer, '\n', MAX_MESSAGE_LEN, TIME_OUT) > 0) {
+                handleMessageFromArduino(buffer);
+            }
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    }
 }

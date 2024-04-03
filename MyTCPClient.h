@@ -3,7 +3,12 @@
 #include "TCPSocket/TCPClient.hpp"
 #include "TCPSocket/TCPUtils.hpp"
 
-#include "wrapper.h"
+#include "serialib.h"
+
+#define SERIAL_PORT "/dev/ttyACM0"
+#define MAX_MESSAGE_LEN 64
+#define BAUDS 115200 //vitesse des données (bit/sec)
+#define TIME_OUT 2000
 
 class MyTCPClient : public TCPClient {
 
@@ -16,11 +21,13 @@ public:
 
     void init();
 
-    ~MyTCPClient() override;
+    void start() override;
 
-    serialib* getSerial() {
-        return &serial;
-    }
+    void stop() override;
+
+    int write_2_arduino(const std::string& message);
+
+    void read_from_arduino();
 
 private:
     std::string serialPort = SERIAL_PORT;

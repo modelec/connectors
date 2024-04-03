@@ -7,7 +7,6 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(TCPSocket REQUIRED TCPSocket)
 
 add_executable(connectors
-        wrapper.cpp
         serialib.cpp
         MyTCPClient.cpp
         MyTCPClient.h

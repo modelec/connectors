@@ -42,8 +42,6 @@ int main(int argc, char *argv[]) {
 
     client.start();
 
-    client.init();
-
     // std::thread readThread(serialReadThread, &client);
 
     while (true) {
