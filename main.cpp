@@ -3,18 +3,11 @@
 #include "serialib.h"
 #include <limits>
 #define SERIAL_PORT "/dev/ttyACM0"
-#define MAX_MESSAGE_LEN 64
+#define MAX_MESSAGE_LEN 1048
 #define BAUDS 115200 //vitesse des données (bit/sec)
-#define TIME_OUT 2000
+#define TIME_OUT 500
 
 using namespace std;
-
-void my_delay(int i)    /*Pause l'application pour i seconds*/
-{
-    clock_t start,end;
-    start=clock();
-    while(((end=clock())-start)<=i*CLOCKS_PER_SEC);
-}
 
 void read_from_arduino(serialib* serial, char * message_output, int nbLines2Rcv){
     strncpy(message_output, "", strlen(message_output));
@@ -27,10 +20,14 @@ void read_from_arduino(serialib* serial, char * message_output, int nbLines2Rcv)
 }
 
 void write_2_arduino(serialib* serial, char* message){
+    int errorCode;
     char myString[MAX_MESSAGE_LEN] = {0};
     strcpy(myString, message);
     myString[strlen(myString)] = '\0';
-    serial->writeString(myString);
+    do{
+        errorCode = serial->writeBytes(myString, strlen(myString));
+    }
+    while(errorCode != 1);
 }
 
 serialib init_serial(){
@@ -44,7 +41,7 @@ int main() {
     char  buffer[MAX_MESSAGE_LEN] = {0};
     int nbLines = 1;
     serialib serial = init_serial();
-    while (1){
+    while (1){//Afficher la position reele avec P, le reste ne renvoie rien
         cout << ">> ";
         fgets(buffer, MAX_MESSAGE_LEN, stdin);
         write_2_arduino(&serial, buffer);
