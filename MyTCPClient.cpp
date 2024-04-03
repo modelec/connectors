@@ -22,21 +22,25 @@ void MyTCPClient::handleMessage(const std::string &message) {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "G " + args[0] + " " + args[1] + "\n";
-            this->write_2_arduino(command);
+            int t = this->write_2_arduino(command);
+            std::cout << t << std::endl;
         } else if (token[2] == "angle") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "R " + args[0] + "\n";
-            this->write_2_arduino(command);
+            int t = this->write_2_arduino(command);
+            std::cout << t << std::endl;
         } else if (token[2] == "set") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "S " + args[0] + " " + args[1] + " " + args[2] + "\n";
-            this->write_2_arduino(command);
+            int t = this->write_2_arduino(command);
+            std::cout << t << std::endl;
         } else if (token[2] == "speed") {
             std::string command = "V " + token[3] + "\n";
 
-            this->write_2_arduino(command);
+            int t = this->write_2_arduino(command);
+            std::cout << t << std::endl;
         }
     }
 }
