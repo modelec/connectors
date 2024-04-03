@@ -46,7 +46,7 @@ void MyTCPClient::init() {
 
     std::cout << "Opening " << SERIAL_PORT << " at " << BAUDS << " bauds" << errorOpening << std::endl;
 
-    if (errorOpening > 0) {
+    if (errorOpening < 0) {
         std::cout << "Error opening serial port" << std::endl;
     }
 
