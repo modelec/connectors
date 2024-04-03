@@ -59,7 +59,5 @@ int main(int argc, char *argv[]) {
 
     // readThread.join();
 
-    client.stop();
-
     return 0;
 }
