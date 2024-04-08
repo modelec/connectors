@@ -37,7 +37,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
             //convert to degres
             angle = angle * 180 / 3.14159265359;
 
-            std::string command = "S " + args[0] + " " + args[1] + " " + angle + "\n";
+            std::string command = "S " + args[0] + " " + args[1] + " " + std::to_string(angle) + "\n";
             int t = this->write_2_arduino(command);
             std::cout << t << std::endl;
         } else if (token[2] == "speed") {
