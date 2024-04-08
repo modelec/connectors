@@ -33,7 +33,11 @@ void MyTCPClient::handleMessage(const std::string &message) {
         } else if (token[2] == "set") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            std::string command = "S " + args[0] + " " + args[1] + " " + args[2] + "\n";
+            double angle = std::stof(args[2]);
+            //convert to degres
+            angle = angle * 180 / 3.14159265359;
+
+            std::string command = "S " + args[0] + " " + args[1] + " " + angle + "\n";
             int t = this->write_2_arduino(command);
             std::cout << t << std::endl;
         } else if (token[2] == "speed") {
