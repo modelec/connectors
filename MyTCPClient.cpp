@@ -27,7 +27,11 @@ void MyTCPClient::handleMessage(const std::string &message) {
         } else if (token[2] == "angle") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            std::string command = "R " + args[0] + "\n";
+            double angle = std::stof(args[1]);
+            //convert to degres
+            double angleDegrees = angle * 180 / 3.14159265359;
+
+            std::string command = "R " + std::to_string(angleDegrees) + "\n";
             int t = this->write_2_arduino(command);
             std::cout << t << std::endl;
         } else if (token[2] == "set") {
