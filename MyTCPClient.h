@@ -36,5 +36,7 @@ private:
     int timeOut = TIME_OUT;
     char buffer[MAX_MESSAGE_LEN] = "";
 
+    bool waitForResponse = false;
+
     serialib serial;
 };

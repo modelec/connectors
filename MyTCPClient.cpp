@@ -77,17 +77,25 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
+    if (!waitForResponse) {
+        return;
+    }
+
     if (message == "p") {
         this->sendMessage("arduino;ihm;pong;1");
+        waitForResponse = false;
     } else {
         std::cout << "Received from arduino : " << message << std::endl;
+        waitForResponse = false;
     }
     // TODO handle the response from arduino
 }
 
 int MyTCPClient::write_2_arduino(const std::string &message) {
     std::cout << "Write to arduino : " << message << std::endl;
-    return serial.writeString(message.c_str());
+    int serialResponse = serial.writeString(message.c_str());
+    waitForResponse = true;
+    return serialResponse;
 }
 
 void MyTCPClient::read_from_arduino() {
