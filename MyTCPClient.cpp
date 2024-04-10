@@ -23,20 +23,20 @@ void MyTCPClient::handleMessage(const std::string &message) {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             std::string command = "G " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + "\n";
-            waitForResponse = true;
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
+            usleep(100);
         } else if (token[2] == "angle") {
             double angle = std::stod(token[3]) / 100;
             //convert to degres
             double angleDegrees = angle * 180 / 3.14159265359;
 
             std::string command = "R " + std::to_string(angleDegrees) + "\n";
-            waitForResponse = true;
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
+            usleep(100);
         } else if (token[2] == "set pos") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
@@ -54,6 +54,10 @@ void MyTCPClient::handleMessage(const std::string &message) {
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
+        } else if (token[2] == "get pos") {
+            std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta);
+
+            this->sendMessage(toSend);
         }
     }
 }
@@ -85,16 +89,13 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
-    } else if (waitForResponse) {
-        std::cout << "Received from arduino : " << message << std::endl;
+    } else {
+        // std::cout << "Received from arduino : " << message << std::endl;
         std::vector<std::string> token = TCPSocket::split(message, ",");
         if (token.size() == 3) {
-            double x = std::stod(token[0]);
-            double y = std::stod(token[1]);
-            double theta = std::stod(token[2]);
-
-            this->sendMessage("arduino;strat;set pos;" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(theta));
-            waitForResponse = false;
+            this->robotPose.pos.x = std::stoi(token[0]);
+            this->robotPose.pos.y = std::stoi(token[1]);
+            this->robotPose.theta = std::stof(token[2]);
         }
     }
 }

@@ -40,4 +40,12 @@ private:
     bool waitForPong = false;
 
     serialib serial;
+
+    struct Position {
+        struct {
+            int x;
+            int y;
+        } pos;
+        float theta;
+    } robotPose;
 };
