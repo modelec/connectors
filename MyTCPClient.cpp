@@ -47,14 +47,12 @@ void MyTCPClient::handleMessage(const std::string &message) {
             double angleDegrees = angle * 180 / 3.14159265359;
 
             std::string command = "S " + args[0] + " " + args[1] + " " + std::to_string(angleDegrees) + "\n";
-            waitForResponse = true;
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "speed") {
             std::string command = "V " + token[3] + "\n";
 
-            waitForResponse = true;
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
