@@ -37,6 +37,7 @@ private:
     char buffer[MAX_MESSAGE_LEN] = "";
 
     bool waitForResponse = false;
+    bool waitForPong = false;
 
     serialib serial;
 };
