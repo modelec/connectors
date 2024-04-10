@@ -16,7 +16,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
     if (token[1] == "arduino" || token[1] == "all") {
         if (token[2] == "ping") {
-            this->write_2_arduino("ping\n");
+            this->write_2_arduino("p\n");
         }
         else if (token[2] == "go") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
@@ -85,7 +85,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
         return;
     }
 
-    if (message == "p") {
+    if (message == "pong") {
         this->sendMessage("arduino;ihm;pong;1");
         waitForResponse = false;
     } else {
