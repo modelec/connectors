@@ -86,7 +86,6 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    std::cout << message << std::endl;
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
