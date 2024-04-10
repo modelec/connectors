@@ -22,7 +22,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
         else if (token[2] == "go") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            std::string command = "G " + args[0] + " " + args[1] + "\n";
+            std::string command = "G " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + "\n";
             waitForResponse = true;
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
@@ -46,7 +46,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
             //convert to degres
             double angleDegrees = angle * 180 / 3.14159265359;
 
-            std::string command = "S " + args[0] + " " + args[1] + " " + std::to_string(angleDegrees) + "\n";
+            std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + std::to_string(angleDegrees) + "\n";
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
