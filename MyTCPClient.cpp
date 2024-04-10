@@ -30,7 +30,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
         } else if (token[2] == "angle") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            double angle = std::stof(args[1]) / 100;
+            double angle = std::stod(args[1]) / 100;
             //convert to degres
             double angleDegrees = angle * 180 / 3.14159265359;
 
@@ -42,7 +42,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
         } else if (token[2] == "set") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            double angle = std::stof(args[2]) / 100;
+            double angle = std::stod(args[2]) / 100;
             //convert to degres
             double angleDegrees = angle * 180 / 3.14159265359;
 
@@ -92,12 +92,14 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
     } else if (waitForResponse) {
         std::cout << "Received from arduino : " << message << std::endl;
         std::vector<std::string> token = TCPSocket::split(message, ",");
-        double x = std::stof(token[0]);
-        double y = std::stof(token[1]);
-        double theta = std::stof(token[2]);
+        if (token.size() == 3) {
+            double x = std::stod(token[0]);
+            double y = std::stod(token[1]);
+            double theta = std::stod(token[2]);
 
-        this->sendMessage("arduino;strat;set pos;" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(theta));
-        waitForResponse = false;
+            this->sendMessage("arduino;strat;set pos;" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(theta));
+            waitForResponse = false;
+        }
     }
 }
 
