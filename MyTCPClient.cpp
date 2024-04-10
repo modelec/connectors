@@ -58,9 +58,9 @@ void MyTCPClient::handleMessage(const std::string &message) {
 }
 
 void MyTCPClient::init() {
-    char errorOpening = this->serial.openDevice(SERIAL_PORT, BAUDS);
+    char errorOpening = this->serial.openDevice(this->serialPort.c_str(), this->bauds);
 
-    std::cout << "Opening " << SERIAL_PORT << " at " << BAUDS << " bauds" << errorOpening << std::endl;
+    std::cout << "Opening " << this->serialPort << " at " << this->bauds << " bauds" << errorOpening << std::endl;
 
     if (errorOpening < 0) {
         std::cout << "Error opening serial port" << std::endl;
@@ -105,8 +105,8 @@ int MyTCPClient::write_2_arduino(const std::string &message) {
 void MyTCPClient::read_from_arduino() {
     while (running) {
         if (serial.isDeviceOpen() && serial.available()) {
-            char buffer[MAX_MESSAGE_LEN+1] = {0};
-            if (serial.readString(buffer, '\n', MAX_MESSAGE_LEN, TIME_OUT) > 0) {
+            char buffer[this->maxMessageLenght+1] = {0};
+            if (serial.readString(buffer, '\n', this->maxMessageLenght, this->timeOut) > 0) {
                 handleMessageFromArduino(buffer);
             }
         } else {
