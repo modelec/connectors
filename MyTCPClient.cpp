@@ -39,7 +39,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
         } else if (token[2] == "set") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
-            double angle = std::stof(args[2]);
+            double angle = std::stof(args[2]) / 100;
             //convert to degres
             double angleDegrees = angle * 180 / 3.14159265359;
 
