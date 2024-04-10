@@ -1,6 +1,6 @@
 #include "MyTCPClient.h"
 
-MyTCPClient::MyTCPClient(const char *ip, int port) : TCPClient(ip, port) {
+MyTCPClient::MyTCPClient(const char *ip, int port) : TCPClient(ip, port), robotPose({{0, 0}, 0}) {
     init();
 }
 
