@@ -108,6 +108,7 @@ void MyTCPClient::read_from_arduino() {
             char buffer[this->maxMessageLenght+1] = {0};
             if (serial.readString(buffer, '\n', this->maxMessageLenght, this->timeOut) > 0) {
                 handleMessageFromArduino(buffer);
+                std::cout << "Arduino recieved" << buffer << std::endl;
             }
         } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
