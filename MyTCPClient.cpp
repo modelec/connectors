@@ -39,7 +39,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
             if (this->write_2_arduino(command) != 1) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
-        } else if (token[2] == "set") {
+        } else if (token[2] == "set pos") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
 
             double angle = std::stod(args[2]) / 100;
