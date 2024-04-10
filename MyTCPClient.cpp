@@ -86,7 +86,8 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    if (message == "pong" && waitForPong) {
+    std::cout << message << std::endl;
+    if (waitForPong && message == "pong\n") {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
     } else if (waitForResponse) {
