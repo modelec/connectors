@@ -16,8 +16,8 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
     if (token[1] == "arduino" || token[1] == "all") {
         if (token[2] == "ping") {
-            this->write_2_arduino("p\n");
             waitForPong = true;
+            this->write_2_arduino("p\n");
         }
         else if (token[2] == "go") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
