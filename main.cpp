@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         std::string message;
-        std::cout << "Enter message ('quit' to exit): ";
         std::getline(std::cin, message);
 
         if (message == "quit") {
