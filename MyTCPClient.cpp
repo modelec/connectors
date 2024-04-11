@@ -95,7 +95,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
         if (token.size() == 3) {
             this->robotPose.pos.x = std::stoi(token[0]);
             this->robotPose.pos.y = std::stoi(token[1]);
-            this->robotPose.theta = std::stof(token[2]);
+            this->robotPose.theta = std::stof(token[2]) / 100;
         }
     }
 }
