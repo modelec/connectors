@@ -55,7 +55,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
                 std::cout << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "get pos") {
-            std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta);
+            std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta * 100);
 
             this->sendMessage(toSend);
         }
