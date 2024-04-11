@@ -17,16 +17,8 @@ int main(int argc, char *argv[]) {
 
     client.start();
 
-    while (true) {
-        std::string message;
-        std::getline(std::cin, message);
-
-        if (message == "quit") {
-            client.stop();
-            break;
-        }
-
-        client.sendMessage(message.c_str());
+    while (!client.shouldStop()) {
+        usleep(100'000);
     }
 
     return 0;
