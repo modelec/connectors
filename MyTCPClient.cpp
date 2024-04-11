@@ -93,9 +93,23 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
         std::cout << "Received from arduino : " << message << std::endl;
         std::vector<std::string> token = TCPSocket::split(message, ",");
         if (token.size() == 3) {
-            this->robotPose.pos.x = std::stoi(token[0]);
-            this->robotPose.pos.y = std::stoi(token[1]);
-            this->robotPose.theta = std::stof(token[2]) / 100;
+            if (TCPSocket::startWith(token[0], ".")) {
+                this->robotPose.pos.x = std::stoi("0" + token[0]);
+            } else {
+                this->robotPose.pos.x = std::stoi(token[0]);
+            }
+
+            if (TCPSocket::startWith(token[1], ".")) {
+                this->robotPose.pos.y = std::stoi("0" + token[1]);
+            } else {
+                this->robotPose.pos.y = std::stoi(token[1]);
+            }
+
+            if (TCPSocket::startWith(token[2], ".")) {
+                this->robotPose.theta = std::stof("0" + token[2]) / 100;
+            } else {
+                this->robotPose.theta = std::stof(token[2]) / 100;
+            }
         }
     }
 }
