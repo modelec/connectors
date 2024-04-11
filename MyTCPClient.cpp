@@ -24,7 +24,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
             std::string command = "G " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + "\n";
             if (this->write_2_arduino(command) != 1) {
-                std::cout << "Error writing to arduino" << std::endl;
+                std::cerr << "Error writing to arduino" << std::endl;
             }
             usleep(100);
         } else if (token[2] == "angle") {
@@ -34,7 +34,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
             std::string command = "R " + std::to_string(angleDegrees) + "\n";
             if (this->write_2_arduino(command) != 1) {
-                std::cout << "Error writing to arduino" << std::endl;
+                std::cerr << "Error writing to arduino" << std::endl;
             }
             usleep(100);
         } else if (token[2] == "set pos") {
@@ -46,13 +46,13 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
             std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + std::to_string(angleDegrees) + "\n";
             if (this->write_2_arduino(command) != 1) {
-                std::cout << "Error writing to arduino" << std::endl;
+                std::cerr << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "speed") {
             std::string command = "V " + token[3] + "\n";
 
             if (this->write_2_arduino(command) != 1) {
-                std::cout << "Error writing to arduino" << std::endl;
+                std::cerr << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "get pos") {
             std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta * 100);
@@ -68,7 +68,7 @@ void MyTCPClient::init() {
     std::cout << "Opening " << this->serialPort << " at " << this->bauds << " bauds" << errorOpening << std::endl;
 
     if (errorOpening < 0) {
-        std::cout << "Error opening serial port" << std::endl;
+        std::cerr << "Error opening serial port" << std::endl;
     }
 
     this->sendMessage("arduino;strat;ready;1");
