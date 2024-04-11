@@ -90,7 +90,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
     } else {
-        std::cout << "Received from arduino : " << message << std::endl;
+        // std::cout << "Received from arduino : " << message << std::endl;
         std::vector<std::string> token = TCPSocket::split(message, ",");
         if (token.size() == 3) {
             if (TCPSocket::startWith(token[0], ".")) {
