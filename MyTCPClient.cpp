@@ -28,23 +28,14 @@ void MyTCPClient::handleMessage(const std::string &message) {
             }
             usleep(100);
         } else if (token[2] == "angle") {
-            double angle = std::stod(token[3]) / 100;
-            //convert to degres
-            double angleDegrees = angle * 180 / 3.14159265359;
-
-            std::string command = "R " + std::to_string(angleDegrees) + "\n";
+            std::string command = "R " + token[3] + "\n";
             if (this->write_2_arduino(command) != 1) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
             usleep(100);
         } else if (token[2] == "set pos") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
-
-            double angle = std::stod(args[2]) / 100;
-            //convert to degres
-            double angleDegrees = angle * 180 / 3.14159265359;
-
-            std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + std::to_string(angleDegrees) + "\n";
+            std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + args[2] + "\n";
             if (this->write_2_arduino(command) != 1) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
