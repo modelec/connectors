@@ -7,7 +7,7 @@
 
 #define SERIAL_PORT "/dev/ttyACM0"
 #define MAX_MESSAGE_LEN 1048
-#define BAUDS 115200 //vitesse des données (bit/sec)
+#define BAUDS 9600 //vitesse des données (bit/sec)
 #define TIME_OUT 500
 
 class MyTCPClient : public TCPClient {
@@ -38,6 +38,8 @@ private:
 
     bool waitForResponse = false;
     bool waitForPong = false;
+
+    bool isDoingSomething = false;
 
     serialib serial;
 

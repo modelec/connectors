@@ -58,6 +58,10 @@ void MyTCPClient::handleMessage(const std::string &message) {
             std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta * 100);
 
             this->sendMessage(toSend);
+        } else if (token[2] == "get state") {
+            std::string toSend = "arduino;strat;set state;" + std::to_string(isDoingSomething);
+
+            this->sendMessage(toSend);
         }
     }
 }
@@ -91,24 +95,28 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
         waitForPong = false;
     } else {
         // std::cout << "Received from arduino : " << message << std::endl;
-        std::vector<std::string> token = TCPSocket::split(message, ",");
-        if (token.size() == 3) {
-            if (TCPSocket::startWith(token[0], ".")) {
-                this->robotPose.pos.x = std::stoi("0" + token[0]);
-            } else {
-                this->robotPose.pos.x = std::stoi(token[0]);
-            }
+        std::vector<std::string> args = TCPSocket::split(message, ":");
+        if (args.size() == 2) {
+            std::vector<std::string> token = TCPSocket::split(args[0], ",");
+            isDoingSomething = (args[1] == "0");
+            if (token.size() == 3) {
+                if (TCPSocket::startWith(token[0], ".")) {
+                    this->robotPose.pos.x = std::stoi("0" + token[0]);
+                } else {
+                    this->robotPose.pos.x = std::stoi(token[0]);
+                }
 
-            if (TCPSocket::startWith(token[1], ".")) {
-                this->robotPose.pos.y = std::stoi("0" + token[1]);
-            } else {
-                this->robotPose.pos.y = std::stoi(token[1]);
-            }
+                if (TCPSocket::startWith(token[1], ".")) {
+                    this->robotPose.pos.y = std::stoi("0" + token[1]);
+                } else {
+                    this->robotPose.pos.y = std::stoi(token[1]);
+                }
 
-            if (TCPSocket::startWith(token[2], ".")) {
-                this->robotPose.theta = std::stof("0" + token[2]) / 100;
-            } else {
-                this->robotPose.theta = std::stof(token[2]) / 100;
+                if (TCPSocket::startWith(token[2], ".")) {
+                    this->robotPose.theta = std::stof("0" + token[2]) / 100;
+                } else {
+                    this->robotPose.theta = std::stof(token[2]) / 100;
+                }
             }
         }
     }
