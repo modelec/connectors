@@ -81,6 +81,7 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
+    std::cout << "Received from arduino : " << message << std::endl;
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
@@ -128,7 +129,7 @@ void MyTCPClient::read_from_arduino() {
         if (serial.isDeviceOpen() && serial.available()) {
             char buffer[this->maxMessageLenght+1] = {0};
             if (serial.readString(buffer, '\n', this->maxMessageLenght, this->timeOut) > 0) {
-                std::thread(&MyTCPClient::handleMessageFromArduino, this, std::string(buffer)).detach();
+                handleMessage(buffer);
             }
         } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
