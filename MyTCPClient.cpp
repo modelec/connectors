@@ -129,7 +129,7 @@ void MyTCPClient::read_from_arduino() {
         if (serial.isDeviceOpen() && serial.available()) {
             char buffer[this->maxMessageLenght+1] = {0};
             if (serial.readString(buffer, '\n', this->maxMessageLenght, this->timeOut) > 0) {
-                handleMessageFromArduino(buffer);
+                std::thread(&MyTCPClient::handleMessageFromArduino, this, buffer).detach();
             }
         } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
