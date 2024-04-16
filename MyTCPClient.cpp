@@ -92,7 +92,6 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             if (args.size() == 2) {
                 std::vector<std::string> token = TCPSocket::split(args[0], ",");
                 this->isDoingSomething = TCPSocket::startWith(args[1], "0");
-                std::cout << "isDoingSomething : " << isDoingSomething << std::endl;
                 if (token.size() == 3) {
                     if (TCPSocket::startWith(token[0], ".")) {
                         this->robotPose.pos.x = std::stoi("0" + token[0]);
