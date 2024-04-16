@@ -5,7 +5,7 @@ MyTCPClient::MyTCPClient(const char *ip, int port) : TCPClient(ip, port), robotP
 }
 
 void MyTCPClient::handleMessage(const std::string &message) {
-    // std::cout << message << std::endl;
+    std::cout << message << std::endl;
 
     std::vector<std::string> token = TCPSocket::split(message, ";");
 
@@ -81,7 +81,7 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    std::cout << "Received from arduino : " << message << std::endl;
+    // std::cout << "Received from arduino : " << message << std::endl;
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
