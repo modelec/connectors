@@ -46,11 +46,11 @@ void MyTCPClient::handleMessage(const std::string &message) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "get pos") {
-            std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta * 100);
+            std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta * 100) + "\n";
 
             this->sendMessage(toSend);
         } else if (token[2] == "get state") {
-            std::string toSend = "arduino;strat;set state;" + std::to_string(isDoingSomething);
+            std::string toSend = "arduino;strat;set state;" + std::to_string(isDoingSomething) + "\n";
 
             this->sendMessage(toSend);
         }
@@ -81,7 +81,7 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    std::cout << "Received from arduino : " << message << std::endl;
+    // std::cout << "Received from arduino : " << message << std::endl;
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
@@ -91,7 +91,8 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
                 std::vector<std::string> token = TCPSocket::split(args[0], ",");
-                isDoingSomething = (args[1] == "0");
+                this->isDoingSomething = (args[1] == "0");
+                std::cout << "isDoingSomething : " << isDoingSomething << std::endl;
                 if (token.size() == 3) {
                     if (TCPSocket::startWith(token[0], ".")) {
                         this->robotPose.pos.x = std::stoi("0" + token[0]);
