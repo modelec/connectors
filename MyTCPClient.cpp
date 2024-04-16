@@ -10,7 +10,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
     std::vector<std::string> token = TCPSocket::split(message, ";");
 
     if (token.size() != 4) {
-        std::cerr << "Invalid message format" << std::endl;
+        // std::cerr << "Invalid message format" << std::endl;
         return;
     }
 
