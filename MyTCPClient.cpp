@@ -91,7 +91,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
                 std::vector<std::string> token = TCPSocket::split(args[0], ",");
-                this->isDoingSomething = (args[1] == "0");
+                this->isDoingSomething = TCPSocket::startWith(args[1], "0");
                 std::cout << "isDoingSomething : " << isDoingSomething << std::endl;
                 if (token.size() == 3) {
                     if (TCPSocket::startWith(token[0], ".")) {
