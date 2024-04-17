@@ -42,6 +42,8 @@ void MyTCPClient::handleMessage(const std::string &message) {
 
             transitMode = {x, y, endSpeed};
 
+            std::cout << "transit mode " << endSpeed << std::endl;
+
             std::string command = "T " + std::to_string(x) + " " + std::to_string(y) + "\n";
 
             if (this->write_2_arduino(command) != 1) {
@@ -95,7 +97,7 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    std::cout << "Received from arduino : " << message << std::endl;
+    // std::cout << "Received from arduino : " << message << std::endl;
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
@@ -105,6 +107,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
                 if (TCPSocket::startWith(args[1], "2")) {
+                    std::cout << "Recieved 2 slow down speed" << std::endl;
                     std::string command = "V " + std::to_string(transitMode.endSPeed) + "\n";
 
                     if (this->write_2_arduino(command) != 1) {
