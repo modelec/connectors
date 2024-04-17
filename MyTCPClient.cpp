@@ -33,6 +33,20 @@ void MyTCPClient::handleMessage(const std::string &message) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
             usleep(100);
+        } else if (token[2] == "transit") {
+            std::vector<std::string> args = TCPSocket::split(token[3], ",");
+
+            int x = std::stoi(args[0]);
+            int y = std::stoi(args[1]);
+            int endSpeed = std::stoi(args[2]);
+
+            transitMode = {x, y, endSpeed};
+
+            std::string command = "T " + std::to_string(x) + " " + std::to_string(y) + "\n";
+
+            if (this->write_2_arduino(command) != 1) {
+                std::cerr << "Error writing to arduino" << std::endl;
+            }
         } else if (token[2] == "set pos") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
             std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + args[2] + "\n";
@@ -90,8 +104,16 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             // std::cout << "Received from arduino : " << message << std::endl;
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
+                if (TCPSocket::startWith(args[1], "2")) {
+                    std::string command = "V " + std::to_string(transitMode.endSPeed) + "\n";
+
+                    if (this->write_2_arduino(command) != 1) {
+                        std::cerr << "Error writing to arduino" << std::endl;
+                    }
+                } else {
+                    this->isDoingSomething = TCPSocket::startWith(args[1], "0");
+                }
                 std::vector<std::string> token = TCPSocket::split(args[0], ",");
-                this->isDoingSomething = TCPSocket::startWith(args[1], "0");
                 if (token.size() == 3) {
                     if (TCPSocket::startWith(token[0], ".")) {
                         this->robotPose.pos.x = std::stoi("0" + token[0]);

@@ -50,4 +50,10 @@ private:
         } pos;
         float theta;
     } robotPose;
+
+    struct Transit {
+        int x;
+        int y;
+        int endSPeed;
+    } transitMode;
 };
