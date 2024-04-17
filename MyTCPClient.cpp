@@ -40,7 +40,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
             int y = std::stoi(args[1]);
             int endSpeed = std::stoi(args[2]);
 
-            transitMode = {x, y, endSpeed};
+            transitMode = {x, y, endSpeed, true};
 
             std::cout << "transit mode " << endSpeed << std::endl;
 
@@ -106,16 +106,19 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             // std::cout << "Received from arduino : " << message << std::endl;
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
-                if (TCPSocket::startWith(args[1], "2")) {
+                if (transitMode.waitingFor2 && TCPSocket::startWith(args[1], "2")) {
                     std::cout << "Recieved 2 slow down speed" << std::endl;
                     std::string command = "V " + std::to_string(transitMode.endSPeed) + "\n";
+
+                    this->transitMode.waitingFor2 = false;
 
                     if (this->write_2_arduino(command) != 1) {
                         std::cerr << "Error writing to arduino" << std::endl;
                     }
                 } else {
-                    this->isDoingSomething = TCPSocket::startWith(args[1], "0");
+                    this->isDoingSomething = !TCPSocket::startWith(args[1], "1");
                 }
+
                 std::vector<std::string> token = TCPSocket::split(args[0], ",");
                 if (token.size() == 3) {
                     if (TCPSocket::startWith(token[0], ".")) {

@@ -55,5 +55,6 @@ private:
         int x;
         int y;
         int endSPeed;
+        bool waitingFor2 = false;
     } transitMode;
 };
