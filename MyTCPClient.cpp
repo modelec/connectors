@@ -61,6 +61,10 @@ void MyTCPClient::handleMessage(const std::string &message) {
             if (this->write_2_arduino(command) != 1) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
+        } else if (token[2] == "clear") {
+            if (this->write_2_arduino(" ") != 1) {
+                std::cerr << "Error writing to arduino" << std::endl;
+            }
         } else if (token[2] == "get pos") {
             std::string toSend = "arduino;strat;set pos;" + std::to_string(this->robotPose.pos.x) + "," + std::to_string(this->robotPose.pos.y) + "," + std::to_string(this->robotPose.theta * 100) + "\n";
 
@@ -109,6 +113,8 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
                 if (transitMode.waitingFor2 && TCPSocket::startWith(args[1], "2")) {
                     std::cout << "Recieved 2 slow down speed" << std::endl;
                     std::string command = "V " + std::to_string(transitMode.endSPeed) + "\n";
+
+                    this->sendMessage("arduino;strat;set speed;" + std::to_string(transitMode.endSPeed) + "\n");
 
                     this->transitMode.waitingFor2 = false;
 
