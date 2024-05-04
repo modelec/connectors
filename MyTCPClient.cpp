@@ -52,6 +52,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
         } else if (token[2] == "set pos") {
             std::vector<std::string> args = TCPSocket::split(token[3], ",");
             std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + args[2] + "\n";
+            std::cout << command << std::endl;
             if (this->write_2_arduino(command) != 1) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
