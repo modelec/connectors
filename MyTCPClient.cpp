@@ -102,13 +102,12 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    std::cout << "Received from arduino : " << message << std::endl;
     if (waitForPong && TCPSocket::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
     } else {
         try {
-            // std::cout << "Received from arduino : " << message << std::endl;
+            std::cout << "Received from arduino : " << message << std::endl;
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
                 if (transitMode.waitingFor2 && TCPSocket::startWith(args[1], "2")) {
@@ -146,6 +145,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
                         this->robotPose.theta = std::stof(token[2]) / 100;
                     }
                 }
+                std::cout << "New position : " << this->robotPose.pos.x << " " << this->robotPose.pos.y << " " << this->robotPose.theta << std::endl;
             }
         } catch (const std::exception& ex) {
             std::cerr << "Error parsing message from arduino : " << ex.what() << std::endl;
