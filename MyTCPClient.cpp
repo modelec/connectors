@@ -110,6 +110,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
             std::cout << "Received from arduino : " << message << std::endl;
             std::vector<std::string> args = TCPSocket::split(message, ":");
             if (args.size() == 2) {
+                std::cout << "is ok1" << std::endl;
                 if (transitMode.waitingFor2 && TCPSocket::startWith(args[1], "2")) {
                     std::cout << "Recieved 2 slow down speed" << std::endl;
                     std::string command = "V " + std::to_string(transitMode.endSPeed) + "\n";
@@ -127,6 +128,7 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
 
                 std::vector<std::string> token = TCPSocket::split(args[0], ",");
                 if (token.size() == 3) {
+                    std::cout << "is ok2" << std::endl;
                     if (TCPSocket::startWith(token[0], ".")) {
                         this->robotPose.pos.x = std::stoi("0" + token[0]);
                     } else {
