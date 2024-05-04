@@ -125,30 +125,30 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
                 } else {
                     this->isDoingSomething = !TCPSocket::startWith(args[1], "1");
                 }
-
-                std::vector<std::string> token = TCPSocket::split(args[0], ",");
-                if (token.size() == 3) {
-                    std::cout << "is ok2" << std::endl;
-                    if (TCPSocket::startWith(token[0], ".")) {
-                        this->robotPose.pos.x = std::stoi("0" + token[0]);
-                    } else {
-                        this->robotPose.pos.x = std::stoi(token[0]);
-                    }
-
-                    if (TCPSocket::startWith(token[1], ".")) {
-                        this->robotPose.pos.y = std::stoi("0" + token[1]);
-                    } else {
-                        this->robotPose.pos.y = std::stoi(token[1]);
-                    }
-
-                    if (TCPSocket::startWith(token[2], ".")) {
-                        this->robotPose.theta = std::stof("0" + token[2]) / 100;
-                    } else {
-                        this->robotPose.theta = std::stof(token[2]) / 100;
-                    }
-                }
-                std::cout << "New position : " << this->robotPose.pos.x << " " << this->robotPose.pos.y << " " << this->robotPose.theta << std::endl;
             }
+
+            std::vector<std::string> token = TCPSocket::split(args[0], ",");
+            if (token.size() == 3) {
+                std::cout << "is ok2" << std::endl;
+                if (TCPSocket::startWith(token[0], ".")) {
+                    this->robotPose.pos.x = std::stoi("0" + token[0]);
+                } else {
+                    this->robotPose.pos.x = std::stoi(token[0]);
+                }
+
+                if (TCPSocket::startWith(token[1], ".")) {
+                    this->robotPose.pos.y = std::stoi("0" + token[1]);
+                } else {
+                    this->robotPose.pos.y = std::stoi(token[1]);
+                }
+
+                if (TCPSocket::startWith(token[2], ".")) {
+                    this->robotPose.theta = std::stof("0" + token[2]) / 100;
+                } else {
+                    this->robotPose.theta = std::stof(token[2]) / 100;
+                }
+            }
+            std::cout << "New position : " << this->robotPose.pos.x << " " << this->robotPose.pos.y << " " << this->robotPose.theta << std::endl;
         } catch (const std::exception& ex) {
             std::cerr << "Error parsing message from arduino : " << ex.what() << std::endl;
         }
