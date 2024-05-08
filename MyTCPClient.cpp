@@ -63,7 +63,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "clear") {
-            if (this->write_2_arduino(" ") != 1) {
+            if (this->write_2_arduino("W") != 1) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "get pos") {
