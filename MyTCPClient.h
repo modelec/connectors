@@ -5,7 +5,7 @@
 
 #include "serialib.h"
 
-#define SERIAL_PORT "/dev/USB_ARDUINO"
+#define SERIAL_PORT "/dev/ttyACM0"
 #define MAX_MESSAGE_LEN 1048
 #define BAUDS 115200 //vitesse des données (bit/sec)
 #define TIME_OUT 500
