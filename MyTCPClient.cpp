@@ -173,8 +173,7 @@ void MyTCPClient::read_from_arduino() {
                 handleMessageFromArduino(buffer);
             }
         } else {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            usleep(10);
         }
-        usleep(10);
     }
 }
