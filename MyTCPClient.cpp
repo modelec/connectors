@@ -172,8 +172,7 @@ void MyTCPClient::read_from_arduino() {
             if (serial.readString(buffer, '\n', this->maxMessageLenght, this->timeOut) > 0) {
                 handleMessageFromArduino(buffer);
             }
-        } else {
-            usleep(10);
         }
+        usleep(10);
     }
 }
