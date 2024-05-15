@@ -27,7 +27,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
             usleep(100);
-        } else if (token[2] == "angle") {
+        } else if (token[2] == "rotate") {
             std::string command = "R " + token[3] + "\n";
             if (this->write_2_arduino(command) != 1) {
                 std::cerr << "Error writing to arduino" << std::endl;
