@@ -1,7 +1,9 @@
 #pragma once
 
-#include "TCPSocket/TCPClient.hpp"
-#include "TCPSocket/TCPUtils.hpp"
+#include <Modelec/TCPClient.h>
+#include <Modelec/Utils.h>
+
+#include <vector>
 
 #include "serialib.h"
 

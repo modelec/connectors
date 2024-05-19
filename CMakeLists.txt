@@ -3,8 +3,11 @@ project(connectors)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(TCPSocket REQUIRED TCPSocket)
+find_package(Modelec COMPONENTS
+        TCPClient
+        Utils
+        REQUIRED
+)
 
 add_executable(connectors
         serialib.cpp
@@ -13,4 +16,4 @@ add_executable(connectors
         main.cpp
 )
 
-target_link_libraries(connectors TCPSocket)
+target_link_libraries(connectors Modelec::TCPClient Modelec::Utils)

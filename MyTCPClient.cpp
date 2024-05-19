@@ -7,7 +7,7 @@ MyTCPClient::MyTCPClient(const char *ip, int port) : TCPClient(ip, port), robotP
 void MyTCPClient::handleMessage(const std::string &message) {
     // std::cout << message << std::endl;
 
-    std::vector<std::string> token = TCPSocket::split(message, ";");
+    std::vector<std::string> token = Modelec::split(message, ";");
 
     if (token.size() != 4) {
         std::cerr << "Invalid message format : " << message << std::endl;
@@ -20,7 +20,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
             this->write_2_arduino("p\n");
         }
         else if (token[2] == "go") {
-            std::vector<std::string> args = TCPSocket::split(token[3], ",");
+            std::vector<std::string> args = Modelec::split(token[3], ",");
 
             std::string command = "G " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + "\n";
             if (this->write_2_arduino(command) != 1) {
@@ -34,7 +34,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
             }
             usleep(100);
         } else if (token[2] == "transit") {
-            std::vector<std::string> args = TCPSocket::split(token[3], ",");
+            std::vector<std::string> args = Modelec::split(token[3], ",");
 
             int x = std::stoi(args[0]);
             int y = std::stoi(args[1]);
@@ -50,7 +50,7 @@ void MyTCPClient::handleMessage(const std::string &message) {
                 std::cerr << "Error writing to arduino" << std::endl;
             }
         } else if (token[2] == "set pos") {
-            std::vector<std::string> args = TCPSocket::split(token[3], ",");
+            std::vector<std::string> args = Modelec::split(token[3], ",");
             std::string command = "S " + std::to_string(std::stoi(args[0])) + " " + std::to_string(std::stoi(args[1])) + " " + args[2] + "\n";
             std::cout << command << std::endl;
             if (this->write_2_arduino(command) != 1) {
@@ -108,15 +108,15 @@ void MyTCPClient::stop() {
 }
 
 void MyTCPClient::handleMessageFromArduino(const std::string &message) {
-    if (waitForPong && TCPSocket::startWith(message, "pong")) {
+    if (waitForPong && Modelec::startWith(message, "pong")) {
         this->sendMessage("arduino;ihm;pong;1");
         waitForPong = false;
     } else {
         try {
             // std::cout << "Received from arduino : " << message << std::endl;
-            std::vector<std::string> args = TCPSocket::split(message, ":");
+            std::vector<std::string> args = Modelec::split(message, ":");
             if (args.size() == 2) {
-                if (transitMode.waitingFor2 && TCPSocket::startWith(args[1], "2")) {
+                if (transitMode.waitingFor2 && Modelec::startWith(args[1], "2")) {
                     std::cout << "Recieved 2 slow down speed" << std::endl;
                     std::string command = "V " + std::to_string(transitMode.endSPeed) + "\n";
 
@@ -128,25 +128,25 @@ void MyTCPClient::handleMessageFromArduino(const std::string &message) {
                         std::cerr << "Error writing to arduino" << std::endl;
                     }
                 } else {
-                    this->isDoingSomething = !TCPSocket::startWith(args[1], "1");
+                    this->isDoingSomething = !Modelec::startWith(args[1], "1");
                 }
             }
 
-            std::vector<std::string> token = TCPSocket::split(args[0], ",");
+            std::vector<std::string> token = Modelec::split(args[0], ",");
             if (token.size() == 3) {
-                if (TCPSocket::startWith(token[0], ".")) {
+                if (Modelec::startWith(token[0], ".")) {
                     this->robotPose.pos.x = std::stoi("0" + token[0]);
                 } else {
                     this->robotPose.pos.x = std::stoi(token[0]);
                 }
 
-                if (TCPSocket::startWith(token[1], ".")) {
+                if (Modelec::startWith(token[1], ".")) {
                     this->robotPose.pos.y = std::stoi("0" + token[1]);
                 } else {
                     this->robotPose.pos.y = std::stoi(token[1]);
                 }
 
-                if (TCPSocket::startWith(token[2], ".")) {
+                if (Modelec::startWith(token[2], ".")) {
                     this->robotPose.theta = std::stof("0" + token[2]) / 100;
                 } else {
                     this->robotPose.theta = std::stof(token[2]) / 100;
