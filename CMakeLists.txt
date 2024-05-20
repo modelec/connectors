@@ -17,4 +17,4 @@ add_executable(connectors
         main.cpp
 )
 
-target_link_libraries(connectors Modelec::TCPClient Modelec::Utils Modelec::)
+target_link_libraries(connectors Modelec::TCPClient Modelec::Utils Modelec::CLParser)
