@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Modelec COMPONENTS
         TCPClient
         Utils
+        CLParser
         REQUIRED
 )
 
@@ -16,4 +17,4 @@ add_executable(connectors
         main.cpp
 )
 
-target_link_libraries(connectors Modelec::TCPClient Modelec::Utils)
+target_link_libraries(connectors Modelec::TCPClient Modelec::Utils Modelec::)
