@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     try{
         client.start();
 
-        while (!client.shouldStop()) {
+        while (!client.shouldStop() && !shouldStop) {
             usleep(100'000);
         }
 
