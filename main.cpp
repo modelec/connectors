@@ -21,7 +21,9 @@ int main(int argc, char *argv[]) {
 
     int port = clParser.getOption<int>("port", 8080);
 
-    MyTCPClient client("127.0.0.1", port);
+    auto host = clParser.getOption("host", "127.0.0.1");
+
+    MyTCPClient client(host, port);
 
     try{
         client.start();
