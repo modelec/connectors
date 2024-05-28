@@ -25,19 +25,13 @@ int main(int argc, char *argv[]) {
 
     MyTCPClient client(host, port);
 
-    try{
-        client.start();
+    client.start();
 
-        while (!client.shouldStop() && !shouldStop) {
-            usleep(100'000);
-        }
+    while (!client.shouldStop() && !shouldStop) {
+        usleep(100'000);
+    }
 
-        client.stop();
-    }
-    catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
+    client.stop();
 
     return 0;
 }
